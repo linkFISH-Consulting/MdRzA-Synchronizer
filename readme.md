@@ -1,3 +1,8 @@
+# Description
+
+Simple Python Script to enter bike rides in the "Mit dem Rad zur Arbeit (MdRzA)" portal.
+
+
 # Usage
 
 ## Create a new virtual environment
