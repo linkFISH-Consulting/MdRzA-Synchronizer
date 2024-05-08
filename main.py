@@ -73,6 +73,9 @@ def main():
     parser.add_argument("--kilometers", type=str, default="8", help="Kilometer für den Datensatz (Standard: 8)")
     args = parser.parse_args()
 
+    text = '12345'
+    encrypted_text = BlowfishEncryption.encrypt_text(text, ENCRYPTION_KEY)
+
     # Erstelle eine Sitzung
     session = requests.Session()
 
