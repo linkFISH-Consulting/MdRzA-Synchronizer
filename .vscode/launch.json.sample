@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["--username", "florian.deutsch@linkfish.eu", "--password", "12345", "--day", "2024-05-07", "--kilometers", "8"]
+            "args": ["--username", "florian.deutsch@linkfish.eu", "--encrypted_password", "/zCWZNwyfIvYqBFxVKuC7w==", "--day", "2024-05-07", "--kilometers", "8"]
         }
     ]
 }

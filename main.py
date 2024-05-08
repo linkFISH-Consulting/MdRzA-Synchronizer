@@ -1,33 +1,15 @@
 import argparse
+import os
 import requests
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
+import BlowfishEncryption
+
+# Load environment variables from .env file
+load_dotenv()
 
 BASE_URL = "https://www.mit-dem-rad-zur-arbeit.de"
-
-def login(session, username, password):
-    # Definiere die URL
-    url = f"{BASE_URL}/bundesweit/index.php"
-    
-    # Definiere die Daten für den POST-Request
-    data = {
-        "username": username,
-        "passwort": password,
-        "btnLogin": "btnLogin"
-    }
-    
-    # Sende den POST-Request
-    response = session.post(url, data=data)
-    
-    # Überprüfe, ob die Anfrage erfolgreich war
-    if response.status_code == 200:
-        print("Anmeldung erfolgreich!")
-        
-        # Gib den HTML-Body zurück
-        return response.text
-        
-    else:
-        print("Fehler bei der Anmeldung:", response.status_code)
-        return None
+ENCRYPTION_KEY = os.getenv("ENCRYPTION_KEY")
 
 def delete_record():
     pass
@@ -57,11 +39,36 @@ def insert_record(session, day, kilometers, teilnehmer_id, csrf_token):
     else:
         print("Fehler beim Einfügen des Datensatzes:", response.status_code)
 
+def login(session, username, encrypted_password):
+    # Definiere die URL
+    url = f"{BASE_URL}/bundesweit/index.php"
+    
+    # Definiere die Daten für den POST-Request
+    data = {
+        "username": username,
+        "passwort": BlowfishEncryption.decrypt_text(encrypted_password, ENCRYPTION_KEY),
+        "btnLogin": "btnLogin"
+    }
+    
+    # Sende den POST-Request
+    response = session.post(url, data=data)
+    
+    # Überprüfe, ob die Anfrage erfolgreich war
+    if response.status_code == 200:
+        print("Anmeldung erfolgreich!")
+        
+        # Gib den HTML-Body zurück
+        return response.text
+        
+    else:
+        print("Fehler bei der Anmeldung:", response.status_code)
+        return None
+
 def main():
     # Parameter
     parser = argparse.ArgumentParser(description="Anmelden und Datensatz einfügen")
     parser.add_argument("--username", type=str, help="Benutzername für die Anmeldung")
-    parser.add_argument("--password", type=str, help="Passwort für die Anmeldung")
+    parser.add_argument("--encrypted_password", type=str, help="Passwort für die Anmeldung (mit Blowfish verschlüsselt)")
     parser.add_argument("--day", type=str, default="2024-05-07", help="Datum für den Datensatz (Standard: 2024-05-07)")
     parser.add_argument("--kilometers", type=str, default="8", help="Kilometer für den Datensatz (Standard: 8)")
     args = parser.parse_args()
@@ -70,7 +77,7 @@ def main():
     session = requests.Session()
 
     # Führe die Anmeldung durch
-    html_body = login(session, args.username, args.password)
+    html_body = login(session, args.username, args.encrypted_password)
     
     if html_body:
 
