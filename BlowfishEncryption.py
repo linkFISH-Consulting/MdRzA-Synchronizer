@@ -28,6 +28,7 @@ def decrypt_text(encrypted_text, key):
     return decrypted_bytes.decode('utf-8')
 
 def encrypt_text(text, key):
+            
     # Convert text and key to bytes
     text_bytes = text.encode('utf-8')
     key_bytes = key.encode('utf-8')

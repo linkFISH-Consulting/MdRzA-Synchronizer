@@ -2,7 +2,6 @@
 
 Simple Python Script to enter bike rides in the "Mit dem Rad zur Arbeit (MdRzA)" portal.
 
-
 # Usage
 
 ## Create a new virtual environment
@@ -17,6 +16,11 @@ Then, create a new virtual environment. For example:
 
 ```bash
 virtualenv mdrza
+```
+
+Enable the virtual environment:
+```bash
+.\mdrza\Scripts\activate
 ```
 
 ## Install dependencies
@@ -36,29 +40,10 @@ Example `.env` file:
 ENCRYPTION_KEY=YourSecretKeyHere
 ```
 
-## Create launch.json for VS Code
-
-Create a `launch.json` file in the `.vscode` directory for Visual Studio Code debugging. You can use the following example:
-
-```json
-{
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Python Debugger: Current File",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
-            "args": ["--username", "florian.deutsch@linkfish.eu", "--encrypted_password", "/zCWZNwyfIvYqBFxVKuC7w==", "--day", "2024-05-07", "--kilometers", "8"]
-        }
-    ]
-}
-```
-
-Make sure to replace the args as needed.
-`encrypted_password` is a blowfish encrypted string. Get an encrypted string using the `BlowfishEncryption.encrypt_text` function.
-
 ## Test it!
 
 Finally, test your setup to ensure everything is working as expected.
+
+```bash
+python synchronize_mdrza.py
+```
