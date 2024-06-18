@@ -423,7 +423,15 @@ def main():
             # extract csrf token and internal user id
             soup = BeautifulSoup(html_body, "html.parser")
             csrf_token = soup.find("input", {"name": "csrf"})["value"]
-            teilnehmer_id = soup.find("input", {"name": "form_data[tn][value]"})["value"]
+            strong_tag = soup.find('strong', text=lambda x: x and 'MdRzA-Teilnehmer-ID' in x)
+
+            if not strong_tag:
+                raise ValueError("MdRzA-Teilnehmer-ID nicht gefunden")
+
+            # Extrahiere die Zahlenfolge aus dem Text:
+            text = strong_tag.get_text()
+            number = ''.join(filter(str.isdigit, text))
+            teilnehmer_id = number 
 
             # upsert records
             for trip in all_trips:
@@ -439,8 +447,8 @@ def main():
                 soup = BeautifulSoup(insert_response, "html.parser")
                 csrf_token = soup.find("input", {"name": "csrf"})["value"]
                 
-                print("Waiting 0.25 seconds between inserts...")
-                time.sleep(0.25)
+                #print("Waiting 0.25 seconds between inserts...")
+                #time.sleep(0.25)
             pass
         else:
             print("No valid cookies.")
